@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ProgramandoWeb</title>
+  <script
+			  src="https://code.jquery.com/jquery-3.4.1.min.js"
+			  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			  crossorigin="anonymous"></script>
+</head>
+<body>
+  <h1>Programandoweb</h1>
+  <h2>Desarrollo y Programación</h2>
+  <!--input/>
+  <div id="enviar" >Enviar</div>
+  <div id="chat"></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript">
+    $("#enviar").click(function(){
+      testing($("input"))
+    })
+    var socket = io()
+    function testing(obj){
+
+      obj={  mensaje:obj.val(),
+                  emisor_id:1,
+                  receptor_id:2,
+                  chat_id:1,
+                  mensaje_id:1110,
+                  estatus:0}
+      socket.emit('enviar_mensaje', obj);
+    }
+    socket.on('actualizar_mensajes', function(data){
+      if(data!=undefined){
+        $.each(data,function(k,v){
+          $("#chat").append("<div>"+v+"</div>")
+        })
+      }
+    });
+  </script-->
+</body>
+</html>

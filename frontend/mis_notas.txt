@@ -1,0 +1,10 @@
+package.json (Windows):
+"scripts": {
+    "start": "set PORT=4000 && react-scripts start"
+}
+
+package.json (Ubuntu):
+
+"scripts": {
+    "start": "export PORT=4000 && react-scripts start"
+}
