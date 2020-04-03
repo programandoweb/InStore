@@ -11,13 +11,6 @@ class ApiRest extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
-
-		if(get("u")!=''){
-			$this->user	=	quien_hace_la_peticion(get("u"));
-			$this->session->set_userdata('User',$this->user	);
-		}else{
-			$this->user			=	$this->session->userdata('User');
-		}
 		$simple_html_dom	=	PATH_LIBRARIES. '/simple_html_dom.php';
 		include_once($simple_html_dom);
 		$this->html		=		new simple_html_dom();
@@ -28,23 +21,10 @@ class ApiRest extends CI_Controller {
 	}
 
 	public function apirequest(){
-		if($this->session->userdata('User')){
-			$this->exec();
-		}else if(		(	get("modulo")=='Usuarios' && (			get("m")=='login'
-																									|| 	get("m")=='register'
-																									|| 	get("m")=='recover'
-																									|| 	get("m")=='Template'
-																								)
-								)||(	get("modulo")=='Template' && (	get("m")=='Tmpl'
-																											|| 	get("m")=='Tmpl2'
-																										)
-														)
-								|| get("modulo")=='Message'
-								|| (get("modulo")=='Monetizacion' && get("m")=='downloadPdf')
-							) {
+		if(		PUBLIC_KEY ==	post("PUBLIC_KEY") ||  PRIVATE_KEY ==	post("token")) {
 			$this->exec();
 		}else{
-			$this->index($this->uri->segment(3).' Sin Autorización ');
+			$this->index($this->uri->segment(3).' Sin Autorización, La clave pública está vencida ');
 		}
 	}
 

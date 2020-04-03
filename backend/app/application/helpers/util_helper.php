@@ -89,10 +89,8 @@ function get_recipientes_alumnos($alumno_id){
 }
 
 function curl_socketJavacript($array='',$stop=false){
-
 		$parametros			=		json_encode($array);
-		$url 						= 	"https://".SOCKET_SERVER.':'.SOCKET_PORT."/emit";
-		//$url 						= 	"https://pioxii.mundosostenible.co/ajax.php";
+		$url 						= 	SOCKET_SERVER.':'.SOCKET_PORT."/emit";
 
 		$fields_string='';
 		foreach($array as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
@@ -2606,6 +2604,7 @@ function send_mail($vars,$return=false){
 		'mailtype'		=> 	MAILTYPE,
 		'charset' 		=> 	CHARSET
 	);
+	//pre($config);
 	$ci->load->library('email', $config);
 	$ci->email->set_newline("\r\n");
 	$ci->email->initialize($config);
