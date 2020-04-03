@@ -1,10 +1,9 @@
 import React from 'react';
-import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import {MainLayout  , LoginLayout , RegisterLayout , RecoverLayout} from "./components/common";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import {MainLayout  , LoginLayout , RegisterLayout , RecoverLayout ,AlertDialogSlide} from "./components/common";
 import Store from "./helpers/store";
-import TeachersLayout from "./components/common/home";
 import {AdminLayout} from "./components/admin/";
+import StateContext from './helpers/contextState';
 
 class App extends React.Component {
 
@@ -13,7 +12,14 @@ class App extends React.Component {
     this.state = {
                     loading: true,
                     loggedIn: false,
+                    dialog:{
+                              status:false,
+                              title:"Título de la ventana",
+                              message:"Prueba de mensaje",
+                              callback:false
+                    }
                   };
+    this._setState = this._setState.bind(this);
   }
 
   componentDidMount() {
@@ -22,6 +28,10 @@ class App extends React.Component {
 
   componentWillUnmount() {
     this.loggedIn();
+  }
+
+  _setState = (data)  =>  {
+    this.setState(data)
   }
 
   loggedIn=()=>{
@@ -41,17 +51,20 @@ class App extends React.Component {
 
   render() {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/" render={props => <MainLayout {...props} />} />
-          <Route  path="/admin"
-                  render={  (props) => this.state.loggedIn ? <AdminLayout  {...props}/>:<LoginLayout methods={this.__loginProps()}/> }
-          />
-        <Route exact path="/auth/login" render={props => <LoginLayout {...props} />} />
-          <Route exact path="/auth/register" render={props => <RegisterLayout {...props} />} />
-          <Route exact path="/auth/recover" render={props => <RecoverLayout {...props} />} />
-        </Switch>
-      </BrowserRouter>
+      <StateContext.Provider value={{setState:this._setState,state:this.state}}>
+        <BrowserRouter>
+          <AlertDialogSlide methods={{setState:this._setState,state:this.state}}/>
+          <Switch>
+            <Route exact path="/" render={props => <MainLayout {...props} />} />
+            <Route  path="/admin"
+                    render={  (props) => this.state.loggedIn ? <AdminLayout  {...props}/>:<LoginLayout methods={this.__loginProps()}/> }
+            />
+          <Route exact path="/auth/login" render={props => <LoginLayout {...props} />} />
+            <Route exact path="/auth/register" render={props => <RegisterLayout {...props} />} />
+            <Route exact path="/auth/recover" render={props => <RecoverLayout {...props} />} />
+          </Switch>
+        </BrowserRouter>
+      </StateContext.Provider>
     );
   }
 }

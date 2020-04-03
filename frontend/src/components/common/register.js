@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
@@ -14,17 +11,16 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import functions from "../../helpers/functions";
-import constants from "../../helpers/constants";
 import Config from "../../helpers/config";
-
-
+import Store from "../../helpers/store";
+import StateContext from '../../helpers/contextState'
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        Programandoweb
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -63,24 +59,49 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function handleSubmit(event,value){
-
-  console.log(value);
-  //functions.PostAsync("User","Register",value);
-  event.preventDefault();
-}
-
 export default function SignInSide(props) {
-  const [value, setInputs] = useState({email:"",celular:"",password:"",password2:""});
-  const classes = useStyles();
+  const [value,  setInputs]   =   useState({});
+  const classes               =   useStyles();
+  const [token,  setToken]    =   useState();
+  const context             =   React.useContext(StateContext);
+
+  useEffect(function getToken() {
+    if (token===undefined && Store.get("security")===null) {
+      setToken('waiting')
+      let send  = {token_clone:Config.PRIVATE_KEY}
+      functions.PostAsync("User","Token",send)
+    }
+  });
 
   function handleChange(event){
     let name      =   event.target.name;
-    //value[name]   =   event.target.value;
     value[name]   =   functions.InputTypeFilter(event);
-    console.log(value[name]);
     setInputs(value);
   };
+
+  function handleSubmit(event,value){
+    event.preventDefault();
+
+    if(document.getElementById("celular").value===''){
+      alert("Por favor complete los datos");
+      return document.getElementById("celular").focus();
+    }
+
+    if(document.getElementById("email").value===''){
+      alert("Por favor complete los datos");
+      return document.getElementById("email").focus();
+    }
+
+    value["submit"]   =   true;
+
+    setInputs(value);
+
+    if(value.password===value.password2){
+      functions.Post("User","Register",value,context);              
+    }else{
+      alert("Por favor complete los datos")
+    }
+  }
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -94,21 +115,22 @@ export default function SignInSide(props) {
           <Typography component="h1" variant="h5">
             Crear cuenta de  Usuario
           </Typography>
-          <FormControl className={classes.form} noValidate onSubmit={function(event){handleSubmit(event,value)}}>
+          <form id="form" className={classes.form} onSubmit={function(event){handleSubmit(event,value)}} autoComplete="false">
             <TextField
-              error
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="celular"
-              label="Celular"
-              name="celular"
-              autoComplete="celular"
-              type="tel"
-              autoFocus
-              onChange={handleChange}
-            />
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="celular"
+                label="Celular"
+                name="celular"
+                autoComplete="celular"
+                type="text"
+                autoFocus
+                onChange={handleChange}
+                aria-describedby="component-error-text"
+                inputProps={{maxLength:10,}}
+              />
             <TextField
               required
               variant="outlined"
@@ -119,8 +141,8 @@ export default function SignInSide(props) {
               label="Correo Electrónico"
               name="email"
               autoComplete="email"
-              autoFocus
               onChange={handleChange}
+              data-validators="isEmail"
             />
             <TextField
               required
@@ -172,7 +194,7 @@ export default function SignInSide(props) {
             <Box mt={5}>
               <Copyright />
             </Box>
-          </FormControl>
+          </form >
         </div>
       </Grid>
     </Grid>

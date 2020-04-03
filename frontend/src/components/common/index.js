@@ -4,6 +4,7 @@ import Header from "./header";
 import LoginLayout from "./login";
 import RegisterLayout from "./register";
 import RecoverLayout from "./recover";
+import AlertDialogSlide from "./dialog";
 
 export {
   MainLayout,
@@ -12,4 +13,5 @@ export {
   LoginLayout,
   RegisterLayout,
   RecoverLayout,
+  AlertDialogSlide,
 }

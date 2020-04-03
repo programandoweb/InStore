@@ -9,7 +9,6 @@ import Badge from '@material-ui/core/Badge';
 import Link from '@material-ui/core/Link';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
@@ -170,7 +169,7 @@ export default function PrimarySearchAppBar() {
         <Toolbar  variant="dense">
           <Typography className={classes.title} variant="h6" noWrap>
             {
-              (constants.View=='LogoSm')?<img src={constants.LogoSm} height="30" />:constants.Title
+              (constants.View==='LogoSm')?<img src={constants.LogoSm} height="30" alt="" />:constants.Title
             }
           </Typography>
           <div className={classes.grow} />
