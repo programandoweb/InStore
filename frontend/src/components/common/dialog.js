@@ -13,10 +13,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function AlertDialogSlide(props) {
 
-  const [open, setOpen]           = React.useState(props.methods.state.dialog.status);
-
   const handleClose = () => {
-    setOpen(false);
     let change  = props.methods.state.dialog;
         change["status"]=false;
     props.methods.setState({dialog:change})

@@ -3,22 +3,23 @@ import Store from "./store";
 
 /*SE DEBE PASAR EL EVENT*/
 const InputTypeFilter=(event)=>{
-  switch (event.target.type) {
-    case "tel":
-      let phoneno = /^\d{10}$/;
-      if((event.target.value.match(phoneno)) || 1===1){
-        ///console.log(event.target.type);
-        return event.target.value
-      }else{
-        return {error:"error"}
-      }
-    break;
-    case "email":
-      return event.target.value
-    break;
-    default:
-    return event.target.value
-  }
+  return event.target.value;
+  // let _return=false
+  // switch (event.target.type) {
+  //   case "tel":
+  //     _return event.target.value
+  //     // let phoneno = /^\d{10}$/;
+  //     // if((event.target.value.match(phoneno))){
+  //     // }else{
+  //     //   return {error:"error"}
+  //     // }
+  //   break
+  //   case "email":
+  //     _return event.target.value
+  //   break
+  //   default:
+  //   return event.target.value
+  // }
 }
 
 const CutString=(text,wordsToCut)=>{
@@ -72,7 +73,7 @@ const Get = (modulo,m,objeto) =>{
   let data      =   new FormData();
 
   Object.entries(objeto).map((v,k) => {
-    data.append (v[0],v[1]);
+    return data.append (v[0],v[1]);
   })
 
   data.append ("u", me.token);
@@ -96,7 +97,7 @@ const PostAsync =  async (modulo,m,objeto,context) =>{
   let data      =   new FormData();
 
   Object.entries(objeto).map((v,k) => {
-    data.append (v[0],v[1]);
+    return data.append (v[0],v[1]);
   })
 
   data.append ("u", me.token);
@@ -119,8 +120,10 @@ const PostAsync =  async (modulo,m,objeto,context) =>{
   try {
     const response    =   await fetch(Config.ConfigApirest + "get?modulo="+modulo+"&m="+m+"&formato=json&u="+me.token,cabecera);
     const json        =   await response.json();
-    if (json.response.callback!=undefined) {
-      eval(data.response.callback+"(data.response)");
+    if (json.response.callback!==undefined) {
+      let _function   =   json.response.callback;
+          _function(data.response)
+      //eval(data.response.callback+"(data.response)");
     }
     return json;
   }catch (error) {
@@ -135,7 +138,7 @@ const Post      =   (modulo,m,objeto,context) =>{
   let data      =   new FormData();
 
   Object.entries(objeto).map((v,k) => {
-    data.append (v[0],v[1]);
+    return data.append (v[0],v[1]);
   })
 
   data.append ("u", me.token);
@@ -159,6 +162,11 @@ const Post      =   (modulo,m,objeto,context) =>{
         .then(response  =>  response.json()        )
         .then(data      =>  { (data.response.callback!==undefined)?eval(data.response.callback+"(data.response,context)"):console.log(data) })
         .catch((error)  =>  { console.log(error)  });
+}
+
+const setSession =  (data)=>{
+  Store.set("user",data)
+  document.location.href  = Config.ConfigAppUrl+'admin'
 }
 
 const dialog = (data,context)=>{

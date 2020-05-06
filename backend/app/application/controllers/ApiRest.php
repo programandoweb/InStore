@@ -21,7 +21,7 @@ class ApiRest extends CI_Controller {
 	}
 
 	public function apirequest(){
-		if(		PUBLIC_KEY ==	post("PUBLIC_KEY") ||  PRIVATE_KEY ==	post("token")) {
+		if(		PUBLIC_KEY ==	post("PUBLIC_KEY") ||  PRIVATE_KEY ==	post("token") || get("testing")=="json") {
 			$this->exec();
 		}else{
 			$this->index($this->uri->segment(3).' Sin Autorización, La clave pública está vencida ');

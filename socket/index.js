@@ -4,7 +4,7 @@
 pm2 start node_modules/react-scripts/bin/react-scripts.js --name "reacj_frontend-chat" -- start
 */
 
-const ENVIRONMENT	=	'development';
+/const ENVIRONMENT	=	'development';
 //const ENVIRONMENT	=	'production';
 
 const fs = require('fs');
@@ -34,19 +34,31 @@ if (ENVIRONMENT=='production') {
 	app.use(express.static(__dirname + '/public'))
 	app.use(bodyParser.json()); // body en formato json
 	app.use(bodyParser.urlencoded({ extended: false })); //body formulario
+
 	app.post('/emit', function (req, res) {
-		  io.sockets.emit("recarga_datos", req.body);
+		  io.sockets.emit("actualizar_mensaje_a_todos", req.body);
+			console.log(req.body);
 			res.json('OK');
 	});
+
 	io.on('connection', function(socket){
-	  io.emit('estatus',"usuario conectado");
+
+		io.emit('estatus',"usuario conectado");
+
 		socket.on('enviar_mensaje_a_todos', function (data) {
 			io.emit('actualizar_mensaje_a_todos', data);
 	  });
+
+		socket.on('PGRW_state', function (data) {
+			io.emit('PGRW_state', data);
+	  });
+
 	})
+
 	server.listen(PORT, () => {
 	  console.log("Server running in port "+ PORT)
 	})
+
 }else {
 	const server  = http.createServer(app);
 	const io = socketio(server);
@@ -58,15 +70,23 @@ if (ENVIRONMENT=='production') {
 	io.emit('estatus',"usuario conectado");
 
 	app.post('/emit', function (req, res) {
-		  io.sockets.emit("recarga_datos", req.body);
+		  io.sockets.emit("actualizar_mensaje_a_todos", req.body);
+			console.log(req.body);
 			res.json('OK');
 	});
 
 	io.on('connection', function(socket){
 	  io.emit('estatus',"usuario conectado");
+
 		socket.on('enviar_mensaje_a_todos', function (data) {
 			io.emit('actualizar_mensaje_a_todos', data);
-	  });
+		});
+
+		socket.on('PGRW_state', function (data) {
+			console.log(data);
+			io.emit('PGRW_state', data);
+		});
+
 	})
 	server.listen(PORT, () => {
 	  console.log("Server running in port "+ PORT)

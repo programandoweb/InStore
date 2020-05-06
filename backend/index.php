@@ -36,20 +36,20 @@ date_default_timezone_set("America/Bogota");
 */
 
 if($_SERVER['HTTP_HOST'] == "localhost"){
-	$dominio		=		'http://'. $_SERVER['HTTP_HOST'].'/learning';
+	$dominio		=		'http://'. $_SERVER['HTTP_HOST'].'/tienda/backend';
 	/*DATABASE*/
 	define('DB_PREFIJO','pgrw_');
 	define('DB_USER','root');
 	define('DB_PASS','');
-	define('DB_DATABASE','inschool');
+	define('DB_DATABASE','tienda');
 }
 else{
 	$dominio		=		'https://' . $_SERVER['HTTP_HOST'].'/';
 	/*DATABASE*/
 	define('DB_PREFIJO','pgrw_');
-	define('DB_USER','pioxii_db');
+	define('DB_USER','ruedamar_tienda');
 	define('DB_PASS','F8x!+lBibK?S');
-	define('DB_DATABASE','pioxii_db');
+	define('DB_DATABASE','ruedamar_tienda');
 }
 
 /*HEADER*/
@@ -63,21 +63,21 @@ define('SEO_GENERATOR',"@InSchool");
 
 
 /*SMTP*/
-define('PROTOCOL'				,	"mail");
-define('SMTP_HOST'				,	"pioxii.mundosostenible.co");
-define('SMTP_PORT'				,	"465");
-define('SMTP_TIMEOUT'			,	"7");
-define('SMTP_USER'				,	"sofia@pioxii.mundosostenible.co");
-define('SMTP_PASS'				,	"#R8MVTgVkQqk");
-define('CHARSET'				,	"utf-8");
-define('NEWLINE'				,	"\r\n");
-define('MAILTYPE'				,	"html");
-define('VALIDATION'				,	TRUE);
-define('FROM_NAME'				,	"InSchool® Colegio Pio XII");
-define('FROM_EMAIL'				,	SMTP_USER);
+define('PROTOCOL'			,	"mail");
+define('SMTP_HOST'		,	"ruedamarket.com");
+define('SMTP_PORT'		,	"465");
+define('SMTP_TIMEOUT'	,	"7");
+define('SMTP_USER'		,	"tienda@ruedamarket.com");
+define('SMTP_PASS'		,	"XP9nEs%fL!v{");
+define('CHARSET'			,	"utf-8");
+define('NEWLINE'			,	"\r\n");
+define('MAILTYPE'			,	"html");
+define('VALIDATION'		,	TRUE);
+define('FROM_NAME'		,	"Tienda");
+define('FROM_EMAIL'		,	SMTP_USER);
 define('CHAT',FALSE);
 define('SOCKET',TRUE);
-define('EMAIL_ADMIN'				,	"Notificaciones Sofia Android");
+define('EMAIL_ADMIN'	,	"Notificaciones Sofia Android");
 
 /*FILES*/
 define('CSS',DOMINIO."/template/css/");
@@ -109,12 +109,14 @@ define('PUBLIC_KEY','PGRW::Puv8xE2hPrDGi4HIEvluAenGubfHx5fUuq');
 define('PRIVATE_KEY','PGRW::Pr4hCWdBswiBkoCfyHGMsMl0967dTblug7');
 
 define('PUSH_KEY','0b44a940a9fa8983e9874a4ef6739467');
-define('PUSH_URL','https://colombia.programandoweb.net:5051');
+define('PUSH_URL','http://localhost:6500');
+
+define('FRONTEND','http://localhost:6501/');
 
 define('SOCKET_KEY',PUSH_KEY);
-define('SOCKET_SERVER','colombia.programandoweb.net');
+define('SOCKET_SERVER','http://localhost');
 define('SOCKET_URL','ApiRest/post?modulo=Chat&m=socketJavacript&formato=none');
-define('SOCKET_PORT',5010);
+define('SOCKET_PORT',6500);
 
 /*
  *---------------------------------------------------------------

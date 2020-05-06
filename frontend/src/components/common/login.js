@@ -11,63 +11,16 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import functions from "../../helpers/functions";
 import Config from "../../helpers/config";
-
-
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100vh',
-  },
-  image: {
-    backgroundImage: 'url(/images/software.png)',
-    backgroundRepeat: 'no-repeat',
-    backgroundColor:
-      theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  },
-  paper: {
-    margin: theme.spacing(8, 4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
-function handleSubmit(event){
-  event.preventDefault();
-}
-
+import useStyles from "../../helpers/useStyles";
+import StateContext from '../../helpers/contextState'
+import Copyright from './copyright'
 
 export default function SignInSide(props) {
   const [value, setInputs] = useState(0);
   const classes = useStyles();
+  const context             =   React.useContext(StateContext);
 
   function handleChange(event){
     let name  = event.target.name;
@@ -76,6 +29,27 @@ export default function SignInSide(props) {
     }
     setInputs(obj);
   };
+
+  function handleSubmit(event,value){
+    event.preventDefault();
+    let data={}
+    if(document.getElementById("email").value===''){
+      alert("Por favor complete los datos");
+      return document.getElementById("email").focus();
+    }else {
+      data["email"] = document.getElementById("email").value;
+      //setInputs({email:document.getElementById("email").value});
+    }
+
+    if(document.getElementById("password").value===''){
+      alert("Por favor complete los datos");
+      return document.getElementById("password").focus();
+    }else {
+      data["password"] = document.getElementById("password").value;
+      //setInputs({password:document.getElementById("password").value});
+    }
+    functions.Post("User","Login",data,context);
+  }
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -89,7 +63,7 @@ export default function SignInSide(props) {
           <Typography component="h1" variant="h5">
             Iniciar Sesión
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} onSubmit={function(event){handleSubmit(event,value)}}  noValidate>
             <TextField
               variant="outlined"
               margin="normal"
@@ -129,12 +103,12 @@ export default function SignInSide(props) {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href={Config.ConfigAppUrl+"auth/recover"} variant="body2">
+                <Link href={Config.ConfigAppUrl+"auth/recover"} >
                   Olvidé mi contraseña
                 </Link>
               </Grid>
               <Grid item>
-                <Link href={Config.ConfigAppUrl+"auth/register"} variant="body3">
+                <Link href={Config.ConfigAppUrl+"auth/register"}>
                   Crear una cuenta
                 </Link>
               </Grid>

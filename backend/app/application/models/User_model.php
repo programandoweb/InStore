@@ -18,6 +18,18 @@ class User_model extends CI_Model {
 		$this->result		=		[];
 	}
 
+	public function json(){
+		 $string 		= file_get_contents("http://localhost/tienda/backend/paises.json");
+		 $json			=	json_decode($string);
+		 $response	=	[];
+		 foreach ($json->data as $key => $value) {
+			 $response[str_replace(" ","_",$value->pais_name)]	=	"+"	.	$value->phone_code;
+		 }
+		 echo json_encode($response);
+
+		 exit;
+	}
+
 	public function token(){
 		//PRIVATE_KEY
 		if (post("token_clone")==PRIVATE_KEY) {
@@ -67,7 +79,7 @@ class User_model extends CI_Model {
 		if($this->check_token_access(post("tokens_access"))){
 			if ($user	=	$this->find_user($post,"usuario_id, celular , nombres , apellidos , token , email")) {
 				$this->result	=	[
-													"message"=>"Ya existe un usuario con los datos suministrados",
+													"message"=>"Ya existe un usuario con los datos suministrados, intente iniciar sesión o recuperar cuenta si la ha olvidado...",
 													"error"=>true,
 													"callback"=>"dialog",
 												];
@@ -145,38 +157,46 @@ class User_model extends CI_Model {
 		}
 	}
 
-	function login(){
+	function Login(){
 		$return	=	array();
 		$row		=	$this->db->select("	usuario_id,
-																	TO_BASE64(tipo_usuario_id) as access,
 																	nombres,
 																	apellidos,
 																	email,
-																	telefono,
+																	celular,
 																	login,
 																	password,
-																	institucion_id")
+																	token")
 												->from(DB_PREFIJO."usuarios")
-												->where("login",$this->post["login"])
-												->or_where("email",$this->post["login"])
-												->or_where("telefono",$this->post["login"])
+												->where("login",$this->post["email"])
+												->or_where("email",$this->post["email"])
+												->or_where("celular",$this->post["email"])
 												->get()
 												->row();
-		if(!empty($row) && md5($this->post["password"])==$row->password){
+
+		if(!empty($row) && $this->post["password"]==desencriptar($row->password)){
 			unset($row->password);
-			$this->result["store"]["user"]	=		$row;
-			$this->result["store"]["token"]	=		genera_token($row->usuario_id);
-			$this->message	=	 "Usuario sí existe";
+			$this->result	=	[
+												"message"=>"",
+												"error"=>false,
+												"callback"=>"setSession",
+												"data"=>$row
+											];
 			return true;
 		}else{
-			$this->result->store["user"]	=		NULL;
-			$this->message	=		"Usuario no existe ó la contraseña es errada";
+
+			$this->result["store"]["user"]	=		NULL;
+			$this->result	=	[
+												"message"=>"Usuario no existe ó la contraseña es errada, intente recuperar cuenta si la ha olvidado...",
+												"error"=>true,
+												"callback"=>"dialog",
+											];
 			return false;
 		}
 	}
 
 	function usuarios($post){
-		$this->db->select("usuario_id,TO_BASE64(tipo_usuario_id) as access,nombres,apellidos,email,telefono,login,password")
+		$this->db->select("usuario_id,TO_BASE64(tipo_usuario_id) as access,nombres,apellidos,email,celular,login,password")
 											->from(DB_PREFIJO."usuarios");
 		if(isset($post["start"])){
 			$this->db->limit(10,$post["start"]);
